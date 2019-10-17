@@ -99,6 +99,7 @@ wait
 
 
 # Assuming the R analysis script is saved in source, this loop passes the coverage file to the R script to generate the neccessary plots.
+# Alternatively, you can edit this to loop through all samples, generating the plots based on normalised read coverage instead of log2 fold change. 
 echo -e passing to Rscript"\n""\n""\n"
 for sample in ${dmg[@]}
 do
