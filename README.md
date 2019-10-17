@@ -24,5 +24,3 @@ The following plots are generated:
 4. A heatmap of a 40kb region centred on the break sites and ordered from highest transcriptional activity to lowest. 
 
 In addition, csv files are writted continaing the data used to generate the boxplots, the associated statistical tests and the correlation tests.
-
-The Rscript can be edited to alter these parameters
