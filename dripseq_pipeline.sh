@@ -15,6 +15,9 @@ un_dmg=(drip0)
 dmg=(drip4)
 sample_ID=("${un_dmg[@]}" "${dmg[@]}")
 
+# WARNING The following code parallelises a lot of the single-threaded task by running them simultaneously for each sample.
+# WARNING If this is unsuitable for you remove the "& done" from the end of the line within the for loop and place "done" on the line below, just above "wait"
+
 # The parameters here are relatively uninteresting.
 # A qscore cutoff of 20 is pretty standard and the length cutoff of 5 is purely to removed rare 1-2nt sequences output by NGS systems that cause problems in the alignemnt.
 # The original fastq is retained as this retains the original data. Later on, BAM/SAM files can be deleted to save storage space as they can be re-generated. 
@@ -47,7 +50,8 @@ wait
 echo -e "\n""\n"Sorting samples"\n"
 for sample in ${sample_ID[@]}
 do
-   samtools sort $rawdir/rawdata/${sample}.sam -l 0 -o $rawdir/rawdata/${sample}sort.bam -O bam -@ 3 -m 1500M & done
+   samtools sort $rawdir/rawdata/${sample}.sam -l 0 -o $rawdir/rawdata/${sample}sort.bam -O bam -@ 3 -m 1500M 
+done
 wait
 echo -e "\n""\n""\n"Indexing"\n"
 for sample in ${sample_ID[@]}
