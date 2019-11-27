@@ -36,7 +36,7 @@ echo -e Alignment results"\n\n" > $rawdir/log/alignments.log
 echo -e "\n\n\n"Alignment results"\n"
 for sample in ${sample_ID[@]}
 do
-   (bowtie2 -p 31 -x /mnt/data/R11/raw_sequencing_data/Aldo_raw_seq/genomes/hg38/hg38 -U $rawdir/rawdata/${sample}qc.fq -S $rawdir/rawdata/${sample}.sam) 2> $rawdir/log/${sample}_align.log
+   (bowtie2 -p 31 -x /genomes/hg38/hg38 -U $rawdir/rawdata/${sample}qc.fq -S $rawdir/rawdata/${sample}.sam) 2> $rawdir/log/${sample}_align.log
    echo ${sample} aligned
    echo -e "\n"${sample} alignment: >> $rawdir/log/alignments.log
    tail -n 5 $rawdir/log/${sample}_align.log >> $rawdir/log/alignments.log
@@ -50,7 +50,7 @@ wait
 echo -e "\n""\n"Sorting samples"\n"
 for sample in ${sample_ID[@]}
 do
-   samtools sort $rawdir/rawdata/${sample}.sam -l 0 -o $rawdir/rawdata/${sample}sort.bam -O bam -@ 3 -m 1500M 
+   samtools sort $rawdir/rawdata/${sample}.sam -l 0 -o $rawdir/rawdata/${sample}sort.bam -O bam -@ 30 -m 2G 
 done
 wait
 echo -e "\n""\n""\n"Indexing"\n"
@@ -70,17 +70,17 @@ do
      samtools depth -aa -d 0 -b $rawdir/asisi20k.bed $rawdir/${sample}sort.bam > $rawdir/${sample}20k.cov & done
 wait
 
-# The following code is not neccessary to automate in this way, but I find it easier.
-# The for loop fills the readcounts array with the number of reads in each sorted SAM, determined using samtools view -c.
-# Sometimes this does not work, but you can manually fill the readcounts array from the readcounts.log
+# The following code automates couting the aligned reads to nomralise the coverage
+# The for loop writes the readcoutns for each alignment to a log file determined using samtools view -c.
+# You can manually fill assign a readcounts array from the readcounts.log after they have been written so you don't have to use samtools view -c again.
 echo -e calculating readcounts"\n"
-readcounts=()
 for sample in ${sample_ID[@]}
 do
-   readcount=$(samtools view -c $rawdir/${sample}sort.bam)
+   readcount=$(samtools view -c $rawdir/rawdata/${sample}sort.bam)
    echo -e ${sample} has $readcount reads
-   readcounts+=$readcount
+   echo -e $readcount>>$rawdir/log/readcounts.log
 done
+readarray -t readcounts < $rawdir/log/readcounts.log
 echo -e readcounts are $readcounts"\n" > $rawdir/log/readcounts.log
 # Recording the readcounts for each sample is important in case this step needs re-running.
 
