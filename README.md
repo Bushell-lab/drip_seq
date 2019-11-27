@@ -1,5 +1,7 @@
 # DRIP-Seq Analysis - Raw data processing 
+
 This pipeline is for use with drip_seq data generated at DNA double-strand breaks induced by the DIvA (Damaged Induced via AsiSI) cell system.
+
 The dripseq_pipeline shell script takes fastq files from samples -/+OHT treatment.
 
 After pre-processing, alignment and sorting, it uses a bed file to calculate read coverage around the cut asisi recognition sites.
