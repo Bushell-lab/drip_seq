@@ -2,9 +2,11 @@
 
 This pipeline is for use with drip_seq data generated at DNA double-strand breaks induced by the DIvA (Damaged Induced via AsiSI) cell system.
 
-The dripseq_pipeline shell script takes fastq files from samples -/+OHT treatment.
+The dripseq_pe_pipeline shell script takes paired end fastq files/bcl files from samples -/+OHT treatment.
 
-After pre-processing, alignment and sorting, it uses a bed file to calculate read coverage around the cut asisi recognition sites.
+After pre-processing, alignment and sorting, it uses converts the paired end alignment to a single read that starts at the first base of the upstream read and ends at the last base of the downstream read. 
+
+This is then used to calculate read coverage around the cut asisi recognition sites.
 
 This read coverage is normalised to the total read number to give reads per million for each nucleotide specified by the bed file.
 
